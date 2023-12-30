@@ -1,0 +1,183 @@
+#include <iostream>
+#include <type_traits>
+
+template<typename T>
+void tell_type(){
+  if(std::is_void<T>::value){
+    std::cout << "T는 void! \n";
+  }else{
+    std::cout << "T는 void 가 아니다 \n";
+  }
+}
+
+int main(){
+  tell_type<int>();
+
+
+  tell_type<void>();
+}
+
+//=========================================is_void
+#include <iostream>
+template<typename T>
+struct is_void{
+static constexpr bool value = false;
+
+};
+
+template<>
+struct is_void<void>{
+static constexpr bool value = true;
+};
+
+template <typename T>
+void tell_type(){
+  if(is_void<T>::value){
+    std::cout << "T는 void! \n";
+  }else{
+    std::cout << "T는 void 가 아니다 \n";
+  }
+}
+
+int main(){
+  tell_type<int>();
+
+  tell_type<void>();
+}
+
+
+//=========================================
+#include <iostream>
+#include <type_traits>
+
+
+class A{
+public: 
+int n;
+
+A(int n ) : n(n) {}
+
+};
+
+int main(){
+  int A::*p_n = &A::n;
+
+  A a(3);
+  std::cout << "a.n :" << a.n << std::endl;
+
+  std::cout << "a.*p_n :" << a.*p_n << std::endl;
+}
+
+//=========================================
+#include <iostream>
+
+template <typename T>
+void test(typename T::x a){
+  std::cout << "T::x \n";
+}
+
+template <typename T>
+void test(typename T::y b){
+  std::cout << "T::y \n";
+}
+struct A{
+using x= int;
+};
+
+struct B{
+using y= int;
+
+
+};
+
+int main(){
+  test<A>(33);
+
+  test<B>(22);
+}
+//=========================================enable_if
+#include <iostream>
+#include <type_traits>
+template <typename T,
+typename = typename std::enable_if<std::is_integral<T>::value>::type>
+void test(const T& t) {
+std::cout << "t : " << t << std::endl;
+}
+int main() {
+test(1); // int
+test(false); // bool
+test('c'); // char
+}
+
+//=========================================
+
+#include <iostream>
+template <typename T>
+다양한 C++ 표준 라이브러리 소개 883
+class vector {
+public:
+vector(size_t num, const T& element) {
+std::cout << element << " 를 " << num << " 개 만들기" << std::endl;
+}
+template <typename Iterator>
+vector(Iterator start, Iterator end) {
+std::cout << "반복자를 이용한 생성자 호출" << std::endl;
+}
+};
+int main() { vector<int> v(10, 3); }
+
+
+//=========================================특정 멤버 함수가 존재하는 타입 만을 받는 함수
+#include <iostream>
+#include <type_traits>
+
+template<typename T, typename = decltype(std::declval<T>().func())>
+void test (const T& t){
+  std::cout << "t.func() : " << t.func() << std::endl;
+}
+
+struct A{
+  int func() const { return 1; }
+};
+
+
+int main(){test(A{});}
+
+
+//=========================================
+#include <iostream>
+#include <type_traits>
+#include <set>
+#include <vector>
+
+
+
+// T 는 반드시 정수 타입을 리턴하는 멤버 함수 func 을 가지고 있어야 한다.
+template <typename Cont, typename = decltype(std::declval<Cont>().begin()), typename = decltype(std::declval<Cont>().end())>
+
+void print(const Cont& container){
+  std::cout << "[";
+  for(auto it = container.begin(); it != container.end(); ++it){
+    std::cout << *it << " ";
+}
+  std::cout << "]\n";
+}
+
+int main() {
+std::vector<int> v = {1,2,3,4,5};
+  print(v);
+
+  std::set<char> s = {'a','b','f','i'};
+  print(s);
+}
+  
+//=========================================
+
+
+//=========================================
+//=========================================
+//=========================================
+
+//=========================================
+//=========================================
+//=========================================
