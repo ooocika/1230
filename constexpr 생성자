@@ -1,0 +1,122 @@
+#include <iostream>
+class Vector {
+public:
+
+constexpr Vector(int x, int y) : x_(x), y_(y) {}
+constexpr int x() const { return x_; }
+constexpr int y() const { return y_; }
+private:
+int x_;
+int y_;
+};
+
+constexpr Vector AddVec(const Vector& v1, const Vector& v2) {
+return {v1.x() + v2.x(), v1.y() + v2.y()};
+}
+
+template <int N>
+struct A {
+int operator()() { return N; }
+};
+int main() {
+constexpr Vector v1{1, 2};
+
+
+constexpr Vector v2{2, 3};
+// constexpr 객체의 constexpr 멤버 함수는 역시 constexpr!
+A<v1.x()> a;
+std::cout << a() << std::endl;
+// AddVec 역시 constexpr 을 리턴한다.
+A<AddVec(v1, v2).x()> b;
+}
+
+//==============================================================if constexpr
+
+#include <iostream>
+
+
+template <typename T>
+void show_value(T t){
+  std::cout << "포인터가 아니다: " << t << std::endl;
+}
+
+template <typename T>
+void show_value(T* t){
+  std::cout << "포인터 이다 : " << *t << std::endl;
+}
+int main(){
+  int x = 3;
+  show_value(x);
+
+  int* p = &x;
+  show_value(p);
+  
+}
+//====================================================================
+#include <iostream>
+#include <type_traits>
+template <typename T>
+void show_value(T t) {
+if constexpr (std::is_pointer<T>::value) {
+std::cout << "포인터 이다 : " << *t << std::endl;
+} else {
+std::cout << "포인터가 아니다 : " << t << std::endl;
+}
+}
+int main() {
+int x = 3;
+show_value(x);
+int* p = &x;
+show_value(p);
+}
+
+
+//====================================================================decltype
+#include <iostream>
+struct A {
+double d;
+};
+int main() {
+int a = 3;
+decltype(a) b = 2; // int
+int& r_a = a;
+decltype(r_a) r_b = b; // int&
+int&& x = 3;
+decltype(x) y = 2; // int&&
+A* aa;
+
+
+decltype(aa->d) dd = 0.1; // double
+}
+
+//====================================================================<utility>
+#include <utility>
+
+template <typename T>
+decltype(std::declval<T>().f()) call_f_and_return(T& t){
+  return t.f();
+}
+
+struct A{
+int f() {return 0;}
+};
+
+struct B{
+B(int x){}
+int f() {return 0;}
+
+};
+
+int main(){
+  A a;
+  B b(1);
+
+  call_f_and_return(a);
+  call_f_and_return(b);
+}
+//====================================================================
+//====================================================================
+//====================================================================
+//====================================================================
+
+
