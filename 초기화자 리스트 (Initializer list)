@@ -1,0 +1,76 @@
+#include <iostream>
+
+class A{
+public:
+A(std::initializer_list<int> l){
+  for(auto itr = l.begin(); itr != l.end(); itr++){
+    std::cout << *itr << std::endl;
+}
+}
+
+};
+
+int main() {A a = {1,2,3,4,5};}
+//===============================================
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+
+template<typename T>
+void print_vec(const std::vector<T>& vec){
+  std::cout << "[";
+  for(const auto& e : vec){
+    std::cout << e << " ";
+    
+  }
+  std::cout << "]" << std::endl;
+}
+template <typename K, typename V>
+void print_map(const std::map<K, V>& m){
+  for(const auto& kv : m){
+    std::cout << kv.first << " : " << kv.second << std::endl;
+  }
+}
+
+int main(){
+  std::vector <int> v = {1,2,3,4,5};
+  print_vec(v);
+
+  std::cout << "-----------------" << std::endl;
+
+  std::map<std::string, int> m = {
+  {"abc", 1}, {"hi", 3}, {"hello", 5}, {"c++", 2}, {"java", 6}};
+  print_map(m);
+}
+
+//===============================================
+#include <iostream>
+#include <initializer_list>
+#include <string>
+
+
+class A{
+public:
+A(int x, double y){std::cout << "일반 생성자 !" << std::endl;}
+
+A(std::initializer_list<std::string>lst){
+  std::cout << "초기화자 사용 생성자!" << std::endl;
+  
+}
+};
+
+int main(){
+  A a(3, 1.5);
+  A b {3, 1.5};
+  A c{"abc", "def"};
+}
+
+
+//===============================================
+//===============================================
+//===============================================
+//===============================================
+
+//===============================================
+//===============================================
